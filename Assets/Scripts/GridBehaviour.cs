@@ -44,6 +44,31 @@ public class GridBehaviour : MonoBehaviour
         }
     }
 
+    public void Manhattan(Node r, Node k)
+    {
+        float dist = Mathf.Abs (r.Position.x - k.Position.x) + Mathf.Abs(r.Position.y - k.Position.y);
+
+        r.Hscore = (int)dist * 10;
+    }
+
+    public void SortOpen(List<Node> O)
+    {        
+        for (int i = 0; i > nodes.Count; i++)
+        {
+            for (int j = 0; j > nodes.Count; j++)
+            {
+                if (O[i].Fscore > O[j].Fscore)
+                {
+                    Node temp = O[i];
+                    O[i] = O[j];
+                    O[j] = temp;
+
+                }
+            }
+        }
+
+    }
+
     public List<Node> Astar(Node Start, Node Goal)
     {
         Node Current;
@@ -57,7 +82,30 @@ public class GridBehaviour : MonoBehaviour
 
         while (Current != Goal)
         {
-            
+            GetNeighbors(Current);
+
+            foreach (Node nd in Current.Neighbors)
+            {
+                if (!Open.Contains(nd))
+                {
+                    Open.Add(nd);
+
+                }
+                nd.CalcG(Current);
+                Manhattan(nd, Goal);
+            }
+
+            SortOpen(Open);
+            Current = Open[0];
+            Open.Remove(Current);
+            Closed.Add(Current);
+        }
+
+        List<Node> Path = new List<Node>();
+
+        while()
+        {
+
         }
     }
     // Start is called before the first frame update
